@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int        @id @default(autoincrement())
+  name        String
+  gender      Gender
+  email       String     @unique
+  password    String
+  phoneNumber Int        @unique
+  money       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  lastLoginAt DateTime   @default(now())
+  LoginCount  Int        @default(0)
+  character   Character?
+  OwnedItem   OwnedItem?
+}
+
+model Character {
+  id      Int    @id @default(autoincrement())
+  gender  Gender
+  beard   String @default("")
+  glasses String @default("")
+  hair    String @default("")
+  hands   String @default("HANDS_01_1")
+  hat     String @default("")
+  head    String @default("HEAD_01_1")
+  pants   String @default("PANTS_01_1")
+  shoes   String @default("SHOES_01_1")
+  torso   String @default("TORSO_01_1")
+  userId  Int    @unique
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model OwnedItem {
+  id              Int      @id @default(autoincrement())
+  clothing        Json     @default("[]")
+  instrument      Json     @default("[]")
+  furniture       Json     @default("[]")
+  lastPurchasedAt DateTime @updatedAt
+  ownerId         Int      @unique
+  owner           User     @relation(fields: [ownerId], references: [id])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}

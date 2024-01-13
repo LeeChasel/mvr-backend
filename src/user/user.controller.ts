@@ -1,39 +1,53 @@
 import { UserService } from './user.service';
-import { Controller, Get, Param, Res, HttpStatus } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
+import { CreateUserDto } from './DTO/create-user.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { LoginDto } from './DTO/login.dto';
 
 @Controller('user')
 export class UserController {
   constructor(
-    private readonly userService: UserService,
-    private configService: ConfigService,
+    private userService: UserService,
+    private authService: AuthService,
   ) {}
 
-  @Get()
-  getTest(): string {
-    const value = this.configService.get('DATABASE_URL');
-    // const a = process.env.NODE_ENV;
-    return value;
+  @Post('register')
+  async register(@Body() body: CreateUserDto) {
+    return this.userService.createUser(body);
   }
 
-  @Get(':username')
-  async getUserByUsername(
-    @Res() res: Response,
-    @Param('username') username: string,
-  ) {
-    //  res.status(HttpStatus.OK).json([]);
-    // res.status(HttpStatus.CREATED).send();
-
-    // res.status(HttpStatus.NOT_FOUND).json({ message: 'Hello World!' });
-    const t = await this.userService.findOne(username);
-    if (t) {
-      res.json(t);
-    } else {
-      res.status(HttpStatus.NOT_FOUND).send();
+  @Post('login')
+  async login(@Body() body: LoginDto) {
+    const user = await this.authService.validateUser(body.email, body.password);
+    if (!user) {
+      throw new UnauthorizedException();
     }
+    const jwt = await this.authService.login(body);
+
+    const lastLoginAt = (await this.userService.getUserLastLogin(body.email))
+      .lastLoginAt;
+    if (
+      new Date(lastLoginAt).toLocaleDateString() !==
+      new Date().toLocaleDateString()
+    ) {
+      await this.userService.updateUserLastLogin(body.email);
+      await this.userService.updateUserLoginCount(body.email);
+    }
+    return jwt;
   }
-  // getUserInfo(): string {
-  //   return this.userService.getUserInfo();
-  // }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('loginCount')
+  async getLoginCount(@Request() req: { user: { email: string } }) {
+    return this.userService.getUserLoginCount(req.user.email);
+  }
 }

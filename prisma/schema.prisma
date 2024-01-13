@@ -16,14 +16,14 @@ model User {
   gender      Gender
   email       String     @unique
   password    String
-  phoneNumber Int        @unique
+  phoneNumber String     @unique
   money       Int        @default(0)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   lastLoginAt DateTime   @default(now())
-  LoginCount  Int        @default(0)
+  loginCount  Int        @default(0)
   character   Character?
-  OwnedItem   OwnedItem?
+  ownedItem   OwnedItem?
 }
 
 model Character {

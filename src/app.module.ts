@@ -4,6 +4,7 @@ import { LoggingInterceptor } from './logging.interceptor';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { CharacterModule } from './character/character.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UserModule,
     AuthModule,
+    CharacterModule,
   ],
   providers: [
     {

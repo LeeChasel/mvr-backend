@@ -1,5 +1,17 @@
 version: '3.8'
 services:
+  nestjs:
+    container_name: nestjs
+    image: node:18
+    ports:
+      - '64550:64550'
+    depends_on:
+      - postgres
+    volumes:
+      - .:/usr/src/app
+    stop_grace_period: 0s
+    working_dir: /usr/src/app
+    command: sh ./runNestjs.sh
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -13,3 +25,9 @@ services:
       - ./db_data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - '8080:8080'

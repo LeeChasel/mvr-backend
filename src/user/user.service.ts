@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './DTO/create-user.dto';
@@ -8,10 +8,14 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  async generateHashedPassword(password: string): Promise<string> {
+    const saltOrRounds = 10;
+    return bcrypt.hash(password, saltOrRounds);
+  }
+
   // TODO: validate email and phoneNumber has not been used
   async createUser(userData: CreateUserDto): Promise<User> {
-    const saltOrRounds = 10;
-    const hash = await bcrypt.hash(userData.password, saltOrRounds);
+    const hash = await this.generateHashedPassword(userData.password);
     return this.prisma.user.create({
       data: {
         ...userData,
@@ -32,6 +36,18 @@ export class UserService {
     return this.prisma.user.findUnique({
       where: {
         email,
+      },
+    });
+  }
+
+  async updatePassword(email: string, password: string) {
+    const hash = await this.generateHashedPassword(password);
+    return this.prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: hash,
       },
     });
   }
@@ -78,6 +94,36 @@ export class UserService {
         loginCount: {
           increment: 1,
         },
+      },
+    });
+  }
+
+  async getUserMoney(email: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        money: true,
+      },
+    });
+  }
+
+  async updateUserMoney(email: string, money: number) {
+    const deposit = (await this.getUserMoney(email)).money;
+    const newMoney = deposit + money;
+    if (newMoney < 0) {
+      throw new HttpException('Not enough money', 400);
+    }
+    return this.prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        money: newMoney,
+      },
+      select: {
+        money: true,
       },
     });
   }

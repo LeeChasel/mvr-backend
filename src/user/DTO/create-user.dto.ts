@@ -4,7 +4,14 @@ import {
   IsPhoneNumber,
   IsNotEmpty,
   IsNumberString,
+  IsEnum,
 } from 'class-validator';
+
+// Need to declare the format: { key = value }, can't be { key(value) }
+enum GENDER {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+}
 
 export class CreateUserDto {
   @IsString()
@@ -23,5 +30,6 @@ export class CreateUserDto {
   phoneNumber: string;
 
   @IsNotEmpty()
-  gender: 'MALE' | 'FEMALE';
+  @IsEnum(GENDER)
+  gender: GENDER;
 }

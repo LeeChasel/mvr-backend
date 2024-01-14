@@ -1,6 +1,6 @@
 # Ports
 
-| **Port**   | **Number** |
+| **Service**  | **Port** |
 | ---------- | ---------- |
 | Nestjs     | 64550      |
 | PostgreSQL | 5432       |
@@ -8,11 +8,12 @@
 
 # Adminer
 
-| **DBSystem** | **PostgreSQL** |
+|  **Field**   |   **Value**    |
 | ------------ | -------------- |
+| DBSystem     | PostgreSQL     |
 | Server       | postgres       |
 | Account      | root           |
 | Password     | root           |
 | DB           |                |
 
-leave the DB input empty
+leave the DB field empty

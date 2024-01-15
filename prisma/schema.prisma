@@ -27,7 +27,6 @@ model User {
   lastLoginAt DateTime   @default(now())
   loginCount  Int        @default(0)
   character   Character?
-  ownedItem   OwnedItem?
 }
 
 model Character {
@@ -42,18 +41,41 @@ model Character {
   pants   String @default("PANTS_01_1")
   shoes   String @default("SHOES_01_1")
   torso   String @default("TORSO_01_1")
-  userId  Int    @unique
-  user    User   @relation(fields: [userId], references: [id])
+  userEmail  String    @unique
+  user    User   @relation(fields: [userEmail], references: [email])
+  furnitures Furniture[]
+  instruments Instrument[]
+  clothings Clothing[]
 }
 
-model OwnedItem {
-  id              Int      @id @default(autoincrement())
-  clothing        Json     @default("[]")
-  instrument      Json     @default("[]")
-  furniture       Json     @default("[]")
-  lastPurchasedAt DateTime @updatedAt
-  ownerId         Int      @unique
-  owner           User     @relation(fields: [ownerId], references: [id])
+model Furniture {
+  id        Int      @id @default(autoincrement())
+  name      String
+  description String?
+  price     Int
+  owners    Character[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Instrument {
+  id        Int      @id @default(autoincrement())
+  name      String
+  description String?
+  price     Int
+  owners    Character[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Clothing {
+  id        Int      @id @default(autoincrement())
+  name      String
+  description String?
+  price     Int
+  owners    Character[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Gender {

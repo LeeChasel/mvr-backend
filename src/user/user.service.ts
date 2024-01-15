@@ -25,9 +25,6 @@ export class UserService {
             gender: userData.gender,
           },
         },
-        ownedItem: {
-          create: {},
-        },
       },
     });
   }

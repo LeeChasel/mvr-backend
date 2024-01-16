@@ -13,7 +13,6 @@ export class UserService {
     return bcrypt.hash(password, saltOrRounds);
   }
 
-  // TODO: validate email and phoneNumber has not been used
   async createUser(userData: CreateUserDto): Promise<User> {
     const hash = await this.generateHashedPassword(userData.password);
     return this.prisma.user.create({
@@ -33,6 +32,14 @@ export class UserService {
     return this.prisma.user.findUnique({
       where: {
         email,
+      },
+    });
+  }
+
+  async findUserByPhoneNumber(phoneNumber: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        phoneNumber,
       },
     });
   }

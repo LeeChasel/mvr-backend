@@ -50,7 +50,7 @@ model Character {
 
 model Furniture {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String @unique
   description String?
   price     Int
   owners    Character[]
@@ -60,7 +60,7 @@ model Furniture {
 
 model Instrument {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String @unique
   description String?
   price     Int
   owners    Character[]
@@ -70,7 +70,7 @@ model Instrument {
 
 model Clothing {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String @unique
   description String?
   price     Int
   owners    Character[]

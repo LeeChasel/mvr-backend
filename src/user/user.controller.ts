@@ -1,11 +1,11 @@
 import { UserService } from './user.service';
 import { createReadStream } from 'fs';
 import { join } from 'path';
-
 import {
   Body,
   Controller,
   Get,
+  HttpException,
   Patch,
   Post,
   Request,
@@ -37,6 +37,20 @@ export class UserController {
 
   @Post('register')
   async register(@Body() body: CreateUserDto) {
+    const userByEmail = await this.userService.findUserByEmail(body.email);
+    const userByPhoneNumber = await this.userService.findUserByPhoneNumber(
+      body.phoneNumber,
+    );
+
+    if (userByEmail) {
+      throw new HttpException(`Email: ${body.email} has been used`, 400);
+    } else if (userByPhoneNumber) {
+      throw new HttpException(
+        `Phone number: ${body.phoneNumber} has been used`,
+        400,
+      );
+    }
+
     return this.userService.createUser(body);
   }
 
@@ -97,8 +111,8 @@ export class UserController {
     return this.userService.updateUserMoney(req.user.email, body.money);
   }
 
-  @Get('test')
-  async test() {
+  @Get('file')
+  test(): StreamableFile {
     const file = createReadStream(join(process.cwd(), 'package.json'));
     return new StreamableFile(file);
   }

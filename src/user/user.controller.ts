@@ -1,6 +1,8 @@
 import { UserService } from './user.service';
 import { createReadStream } from 'fs';
 import { join } from 'path';
+import * as moment from 'moment';
+
 import {
   Body,
   Controller,
@@ -61,13 +63,11 @@ export class UserController {
       throw new UnauthorizedException();
     }
     const jwt = await this.authService.login(body);
-
     const lastLoginAt = (await this.userService.getUserLastLogin(body.email))
       .lastLoginAt;
-    if (
-      new Date(lastLoginAt).toLocaleDateString() !==
-      new Date().toLocaleDateString()
-    ) {
+
+    moment.locale('zh-tw');
+    if (!moment(lastLoginAt).isSame(moment(), 'days')) {
       await this.userService.updateUserLastLogin(body.email);
       await this.userService.updateUserLoginCount(body.email);
     }

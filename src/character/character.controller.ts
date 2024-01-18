@@ -6,13 +6,17 @@ import {
   Post,
   Body,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { CharacterService } from './character.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UpdateCharacterDto } from './DTO/update-character';
-import { updateInstrumentsDto } from './DTO/update-instruments';
+import { UpdateInstrumentsDto } from './DTO/update-instruments';
 import { UpdateClothingsDto } from './DTO/update-clothings';
 import { UpdateFurnituresDto } from './DTO/update-furnitures';
+import { DeleteInstrumentsDto } from './DTO/delete-instruments';
+import { DeleteClothingsDto } from './DTO/delete-clothings';
+import { DeleteFurnituresDto } from './DTO/delete-furnitures';
 
 @UseGuards(JwtAuthGuard)
 @Controller('character')
@@ -53,7 +57,7 @@ export class CharacterController {
   @Patch('instruments')
   async updateInstruments(
     @Request() req: { user: { email: string } },
-    @Body() updateData: updateInstrumentsDto,
+    @Body() updateData: UpdateInstrumentsDto,
   ) {
     const instrumentNames: string[] = [];
     for (const instrument of updateData.instruments) {
@@ -115,5 +119,41 @@ export class CharacterController {
       furnitureNames,
     );
     return updatedFurnitures.furnitures;
+  }
+
+  @Delete('instruments')
+  async deleteInstruments(
+    @Request() req: { user: { email: string } },
+    @Body() deletedData: DeleteInstrumentsDto,
+  ) {
+    const instruments = await this.characterService.deleteInstruments(
+      req.user.email,
+      deletedData.instruments,
+    );
+    return instruments.instruments;
+  }
+
+  @Delete('clothings')
+  async deleteClothings(
+    @Request() req: { user: { email: string } },
+    @Body() deletedData: DeleteClothingsDto,
+  ) {
+    const clothings = await this.characterService.deleteClothings(
+      req.user.email,
+      deletedData.clothings,
+    );
+    return clothings.clothings;
+  }
+
+  @Delete('furnitures')
+  async deleteFurnitures(
+    @Request() req: { user: { email: string } },
+    @Body() deletedData: DeleteFurnituresDto,
+  ) {
+    const furnitures = await this.characterService.deleteFurnitures(
+      req.user.email,
+      deletedData.furnitures,
+    );
+    return furnitures.furnitures;
   }
 }

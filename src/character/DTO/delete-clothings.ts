@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class UpdateInstrumentsDto {
+export class DeleteClothingsDto {
   @IsString({ each: true, message: 'Must be an array of strings' })
-  instruments: string[];
+  clothings: string[];
 }

@@ -177,4 +177,64 @@ export class CharacterService {
       },
     });
   }
+
+  async deleteInstruments(email: string, instruments: string[]) {
+    return this.prismaService.character.update({
+      where: {
+        userEmail: email,
+      },
+      data: {
+        instruments: {
+          disconnect: instruments.map((instrument) => ({ name: instrument })),
+        },
+      },
+      select: {
+        instruments: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteClothings(email: string, clothings: string[]) {
+    return this.prismaService.character.update({
+      where: {
+        userEmail: email,
+      },
+      data: {
+        clothings: {
+          disconnect: clothings.map((clothing) => ({ name: clothing })),
+        },
+      },
+      select: {
+        clothings: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteFurnitures(email: string, furnitures: string[]) {
+    return this.prismaService.character.update({
+      where: {
+        userEmail: email,
+      },
+      data: {
+        furnitures: {
+          disconnect: furnitures.map((furniture) => ({ name: furniture })),
+        },
+      },
+      select: {
+        furnitures: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
 }

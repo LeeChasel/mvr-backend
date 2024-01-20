@@ -5,9 +5,15 @@
 
 # Installation
 
+1. Download the project
+
 ```bash
 git clone https://github.com/LeeChasel/mvr-backend.git
 ```
+
+2. Copy `.env.example` to `.env`, and fill in environment variables
+
+3. First need to [execute](#execution) the service, then use the [command](#seed-initial-data-to-the-database) the seed initial data
 
 # Execution
 
@@ -37,3 +43,9 @@ docker compose up
 | Account   | root       |
 | Password  | root       |
 | DB        | _empty_    |
+
+### Seed initial data to the database
+
+```bash
+ docker compose exec nestjs npx prisma db seed
+```

@@ -44,6 +44,10 @@ docker compose up
 | Password  | root       |
 | DB        | _empty_    |
 
+### Swagger for api document
+
+go to `baseURL:64550/api`
+
 ### Seed initial data to the database
 
 ```bash

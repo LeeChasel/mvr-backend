@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateCharacterDto } from './DTO/update-character';
+import { UpdateCharacterDto } from './DTO/update-characterd.dto';
 
 @Injectable()
 export class CharacterService {

@@ -6,21 +6,18 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { CharacterModule } from './character/character.module';
 
+const envConfig = ConfigModule.forRoot({
+  isGlobal: true,
+  cache: true,
+});
+
+const loggingConfig = {
+  provide: APP_INTERCEPTOR,
+  useClass: LoggingInterceptor,
+};
+
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      cache: true,
-    }),
-    UserModule,
-    AuthModule,
-    CharacterModule,
-  ],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
-  ],
+  imports: [envConfig, UserModule, AuthModule, CharacterModule],
+  providers: [loggingConfig],
 })
 export class AppModule {}

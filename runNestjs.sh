@@ -12,8 +12,5 @@ npx prisma generate
 # For development
 # npm run start:dev
 
-# Creates a "dist" folder with the production build
-npm run build
-
 # For production
-npm run start:prod
+npm run start

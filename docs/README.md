@@ -46,10 +46,14 @@ docker compose up
 
 ### Swagger for api document
 
-go to `baseURL:64550/api`
+Go to `<baseURL>:64550/api`
 
 ### Seed initial data to the database
 
 ```bash
  docker compose exec nestjs npx prisma db seed
 ```
+
+## Entity-Relationship Diagram
+
+![](db_diagram.png)
